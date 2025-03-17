@@ -5,25 +5,21 @@ import java.util.Set;
 public class TaskManager {
     int nextTaskId;
     ArrayList<Task> tasks;
-    HashMap<Epic, ArrayList<Subtask>> epics;
+    ArrayList<Subtask> subtasks;
+    ArrayList<Epic> epics;
+
+//    HashMap<Epic, ArrayList<Subtask>> epics;
 
     public ArrayList<Task> getTasks() {
-        return tasks;
+        return this.tasks;
     }
 
-    public Set<Epic> getEpics() {
-        return epics.keySet();
+    public ArrayList<Epic> getEpics() {
+        return this.epics;
     }
 
     public ArrayList<Subtask> getSubtasks(){
-        ArrayList<Subtask> allSubtasks = new ArrayList<>();
-        for (Epic epic : epics.keySet()) {
-            ArrayList<Subtask> epicSubtasks = epics.get(epic);
-            for (Subtask subtask : epicSubtasks) {
-                allSubtasks.add(subtask);
-            }
-        }
-        return allSubtasks;
+        return this.subtasks;
     }
 
     public void removeAllTasks(){
@@ -35,9 +31,30 @@ public class TaskManager {
     }
 
     public void removeAllSubtasks(){
-        for (Epic epic : epics.keySet()) {
-            ArrayList<Subtask> epicSubtasks = epics.get(epic);
-            epicSubtasks.clear();
+        this.subtasks.clear();
+    }
+
+    public Task getTaskById(int id){
+        for (Task task : this.tasks) {
+            if (task.getId() == id){
+                return task;
+            }
+        }
+    }
+
+    public Subtask getSubtaskById(int id){
+        for (Subtask subtask : this.subtasks) {
+            if (subtask.getId() == id){
+                return subtask;
+            }
+        }
+    }
+
+    public Epic getEpicById(int id){
+        for (Epic epic : this.epics) {
+            if (epic.getId() == id){
+                return epic;
+            }
         }
     }
 }
