@@ -6,23 +6,37 @@ public class Task {
     protected int id;
     protected Status status;
 
-    public Task(String name, String description, int id) {
+    public Task(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.status = Status.NEW;
+    }
+
+    public Task(String name, String description, int id, Status status) {
         this.name = name;
         this.description = description;
         this.id = id;
-        this.status = Status.NEW;
+        this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public int getId() {
         return this.id;
     }
 
-    public Status getStatus() {
-        return this.status;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public Status getStatus() {
+        return this.status;
     }
 
     @Override
