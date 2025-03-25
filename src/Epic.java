@@ -13,10 +13,6 @@ public class Epic extends Task {
         this.subtaskIds = subtaskIds;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public ArrayList<Integer> getSubtaskIds() {
         return subtaskIds;
     }
@@ -32,11 +28,11 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return "Epic{" +
-                "id=" + this.id +
-                ", name='" + this.name + "'" +
-                ", description='" + this.description + "'" +
+                "id=" + this.getId() +
+                ", name='" + this.getName() + "'" +
+                ", description='" + this.getDescription() + "'" +
                 ", subtaskIds=" + this.subtaskIds +
-                ", status=" + this.status +
+                ", status=" + this.getStatus() +
                 '}';
     }
 }

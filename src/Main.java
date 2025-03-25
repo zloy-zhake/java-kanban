@@ -104,5 +104,13 @@ public class Main {
         System.out.println();
         System.out.println("Subtasks: " + taskManager.getSubtasks());
         System.out.println();
+
+        System.out.println("Проверка удаления всех подзадач.");
+        System.out.println();
+        taskManager.removeAllSubtasks();
+        System.out.println("Subtasks: " + taskManager.getSubtasks());
+        System.out.println();
+        System.out.println("Epics: " + taskManager.getEpics());
+        System.out.println();
     }
 }

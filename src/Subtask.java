@@ -19,10 +19,10 @@ public class Subtask extends Task{
     public String toString() {
         return "Subtask{" +
                 "epicId=" + this.epicId +
-                ", id=" + this.id +
-                ", name='" + this.name + "'" +
-                ", description='" + this.description + "'" +
-                ", status=" + this.status +
+                ", id=" + this.getId() +
+                ", name='" + this.getName() + "'" +
+                ", description='" + this.getDescription() + "'" +
+                ", status=" + this.getStatus() +
                 '}';
     }
 }

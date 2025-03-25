@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class TaskManager {
     int nextTaskId;
@@ -14,22 +15,16 @@ public class TaskManager {
         epics = new HashMap<>();
     }
 
-    //    единая точка генерации id для всех видов задач
-    private int getNextId() {
-        this.nextTaskId++;
-        return this.nextTaskId;
+    public ArrayList<Task> getTasks() {
+        return new ArrayList<>(this.tasks.values());
     }
 
-    public HashMap<Integer, Task> getTasks() {
-        return this.tasks;
+    public ArrayList<Epic> getEpics() {
+        return new ArrayList<>(this.epics.values());
     }
 
-    public HashMap<Integer, Epic> getEpics() {
-        return this.epics;
-    }
-
-    public HashMap<Integer, Subtask> getSubtasks() {
-        return this.subtasks;
+    public ArrayList<Subtask> getSubtasks() {
+        return new ArrayList<>(this.subtasks.values());
     }
 
     public void removeAllTasks() {
@@ -38,9 +33,22 @@ public class TaskManager {
 
     public void removeAllEpics() {
         this.epics.clear();
+        this.subtasks.clear();
     }
 
+//    В методе для удаления подзадач необходимо очищать все подзадачи из коллекции, в которой они хранятся,
+//     а также удалять их из всех эпиков, с которыми они связаны,
+//     при этом необходимо обновить статус соответствующих эпиков
     public void removeAllSubtasks() {
+        HashSet<Epic> epicsToUpdate = new HashSet<>();
+        for (Subtask subtask : this.getSubtasks()) {
+            Epic connectedEpic = this.getEpicById(subtask.getEpicId());
+            epicsToUpdate.add(connectedEpic);
+            connectedEpic.removeSubtaskId(subtask.getId());
+        }
+        for (Epic epic : epicsToUpdate) {
+            this.updateEpicStatus(epic);
+        }
         this.subtasks.clear();
     }
 
@@ -66,9 +74,8 @@ public class TaskManager {
     }
 
     public int addTask(Task newTask) {
-        int newTaskId = this.getNextId();
-        newTask.setId(newTaskId);
-        this.tasks.put(newTaskId, newTask);
+        newTask.setId(this.getNextId());
+        this.tasks.put(newTask.getId(), newTask);
         return newTask.getId();
     }
 
@@ -78,19 +85,17 @@ public class TaskManager {
 //    - добавить её в связанный эпик
 //    - пересчитать статус связанного эпика
     public int addSubtask(Subtask newSubtask) {
-        int newTaskId = this.getNextId();
-        newSubtask.setId(newTaskId);
-        this.subtasks.put(newTaskId, newSubtask);
+        newSubtask.setId(this.getNextId());
+        this.subtasks.put(newSubtask.getId(), newSubtask);
         Epic connectedEpic = getEpicById(newSubtask.getEpicId());
-        connectedEpic.addSubtaskId(newTaskId);
+        connectedEpic.addSubtaskId(newSubtask.getId());
         this.updateEpicStatus(connectedEpic);
         return newSubtask.getId();
     }
 
     public int addEpic(Epic newEpic) {
-        int newTaskId = this.getNextId();
-        newEpic.setId(newTaskId);
-        this.epics.put(newTaskId, newEpic);
+        newEpic.setId(this.getNextId());
+        this.epics.put(newEpic.getId(), newEpic);
         return newEpic.getId();
     }
 
@@ -110,6 +115,50 @@ public class TaskManager {
     public void updateEpic(Epic newEpic) {
         this.epics.put(newEpic.getId(), newEpic);
         this.updateEpicStatus(newEpic);
+    }
+
+    public void removeTaskById(int idToRemove) {
+        this.tasks.remove(idToRemove);
+    }
+
+    //    при удалении подзадачи необходимо:
+//    - удалить её из связанного эпика
+//    - пересчитать статус связанного эпика
+//    - удалить её из HashMap'а подзадач
+    public void removeSubtaskById(int idToRemove) {
+        Subtask subtaskToRemove = this.getSubtaskById(idToRemove);
+        Epic connectedEpic = this.getEpicById(subtaskToRemove.getEpicId());
+        connectedEpic.removeSubtaskId(idToRemove);
+        this.updateEpicStatus(connectedEpic);
+        this.subtasks.remove(idToRemove);
+    }
+
+    //    При удалении эпика необходимо:
+//    - удалить из HashMap'а подзадач все его подзадачи
+//    - удалить его HashMap'а эпиков
+    public void removeEpicById(int idToRemove) {
+        Epic epicToRemove = this.getEpicById(idToRemove);
+        if (epicToRemove != null) {
+            ArrayList<Integer> subtaskIds = new ArrayList<>(epicToRemove.getSubtaskIds());
+            for (int subtaskToRemoveId : subtaskIds) {
+                this.removeSubtaskById(subtaskToRemoveId);
+            }
+            this.epics.remove(idToRemove);
+        }
+    }
+
+    public ArrayList<Subtask> getSubtasksOfEpic(Epic epic) {
+        ArrayList<Subtask> epicSubtasks = new ArrayList<>();
+        for (Integer subtaskId : epic.getSubtaskIds()) {
+            epicSubtasks.add(this.getSubtaskById(subtaskId));
+        }
+        return epicSubtasks;
+    }
+
+    //    единая точка генерации id для всех видов задач
+    private int getNextId() {
+        this.nextTaskId++;
+        return this.nextTaskId;
     }
 
     private void updateEpicStatus(Epic epicToUpdate) {
@@ -153,41 +202,4 @@ public class TaskManager {
         }
     }
 
-    public void removeTaskById(int idToRemove) {
-        this.tasks.remove(idToRemove);
-    }
-
-    //    при удалении подзадачи необходимо:
-//    - удалить её из связанного эпика
-//    - пересчитать статус связанного эпика
-//    - удалить её из HashMap'а подзадач
-    public void removeSubtaskById(int idToRemove) {
-        Subtask subtaskToRemove = this.getSubtaskById(idToRemove);
-        Epic connectedEpic = this.getEpicById(subtaskToRemove.getEpicId());
-        connectedEpic.removeSubtaskId(idToRemove);
-        this.updateEpicStatus(connectedEpic);
-        this.subtasks.remove(idToRemove);
-    }
-
-    //    При удалении эпика необходимо:
-//    - удалить из HashMap'а подзадач все его подзадачи
-//    - удалить его HashMap'а эпиков
-    public void removeEpicById(int idToRemove) {
-        Epic epicToRemove = this.getEpicById(idToRemove);
-        if (epicToRemove != null) {
-            ArrayList<Integer> subtaskIds = new ArrayList<>(epicToRemove.getSubtaskIds());
-            for (int subtaskToRemoveId : subtaskIds) {
-                this.removeSubtaskById(subtaskToRemoveId);
-            }
-            this.epics.remove(idToRemove);
-        }
-    }
-
-    ArrayList<Subtask> getSubtasksOfEpic(Epic epic) {
-        ArrayList<Subtask> epicSubtasks = new ArrayList<>();
-        for (Integer subtaskId : epic.getSubtaskIds()) {
-            epicSubtasks.add(this.getSubtaskById(subtaskId));
-        }
-        return epicSubtasks;
-    }
 }
