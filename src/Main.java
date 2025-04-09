@@ -26,12 +26,12 @@ public class Main {
         Subtask subtask_2_1 = new Subtask("Подзадача 2-1", "Описание подзадачи 2-1.", epic2_id);
         int subtask_2_1_id = taskManager.addSubtask(subtask_2_1);
 
-//        System.out.println("Epics: " + taskManager.getEpics());
-//        System.out.println();
-//        System.out.println("Tasks: " + taskManager.getTasks());
-//        System.out.println();
-//        System.out.println("Subtasks: " + taskManager.getSubtasks());
-//        System.out.println();
+        System.out.println("Epics: " + taskManager.getEpics());
+        System.out.println();
+        System.out.println("Tasks: " + taskManager.getTasks());
+        System.out.println();
+        System.out.println("Subtasks: " + taskManager.getSubtasks());
+        System.out.println();
 
         printHistory(taskManager);
         System.out.println();
