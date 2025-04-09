@@ -7,14 +7,15 @@ public class InMemoryTaskManager implements TaskManager {
     HashMap<Integer, Task> tasks;
     HashMap<Integer, Subtask> subtasks;
     HashMap<Integer, Epic> epics;
-    ArrayList<Task> taskHistory;
+    HistoryManager historyManager;
 
     public InMemoryTaskManager() {
-        nextTaskId = 0;
-        tasks = new HashMap<>();
-        subtasks = new HashMap<>();
-        epics = new HashMap<>();
-        taskHistory = new ArrayList<>();
+        this.nextTaskId = 0;
+        this.tasks = new HashMap<>();
+        this.subtasks = new HashMap<>();
+        this.epics = new HashMap<>();
+        Managers managers = new Managers();
+        this.historyManager = managers.getDefaultHistory();
     }
 
     @Override
@@ -64,7 +65,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTaskById(int id) {
         if (this.tasks.containsKey(id)) {
             Task taskToGet =  this.tasks.get(id);
-            this.addTaskToHistory(taskToGet);
+            this.historyManager.add(taskToGet);
             return taskToGet;
         }
         return null;
@@ -74,7 +75,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Subtask getSubtaskById(int id) {
         if (this.subtasks.containsKey(id)) {
             Subtask subtaskToGet = this.subtasks.get(id);
-            this.addTaskToHistory(subtaskToGet);
+            this.historyManager.add(subtaskToGet);
             return subtaskToGet;
         }
         return null;
@@ -84,7 +85,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpicById(int id) {
         if (this.epics.containsKey(id)) {
             Epic epicToGet = this.epics.get(id);
-            this.addTaskToHistory(epicToGet);
+            this.historyManager.add(epicToGet);
             return epicToGet;
         }
         return null;
@@ -225,15 +226,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
-        return this.taskHistory;
-    }
-
-    private void addTaskToHistory(Task task) {
-        if (this.taskHistory.size() == 10) {
-            this.taskHistory.removeFirst();
-        }
-        this.taskHistory.add(task);
+    public HistoryManager getHistoryManager() {
+        return this.historyManager;
     }
 
     // единая точка генерации id для всех видов задач
