@@ -3,7 +3,8 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
         System.out.println();
-        TaskManager taskManager = new InMemoryTaskManager();
+        Managers taskManagerUtil = new Managers();
+        TaskManager taskManager = taskManagerUtil.getDefault();
 
         System.out.println("Создайте две задачи, а также эпик с двумя подзадачами и эпик с одной подзадачей.");
         System.out.println("Распечатайте списки эпиков, задач и подзадач через System.out.println(..)");
