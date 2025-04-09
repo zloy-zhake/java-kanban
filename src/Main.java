@@ -26,11 +26,14 @@ public class Main {
         Subtask subtask_2_1 = new Subtask("Подзадача 2-1", "Описание подзадачи 2-1.", epic2_id);
         int subtask_2_1_id = taskManager.addSubtask(subtask_2_1);
 
-        System.out.println("Epics: " + taskManager.getEpics());
-        System.out.println();
-        System.out.println("Tasks: " + taskManager.getTasks());
-        System.out.println();
-        System.out.println("Subtasks: " + taskManager.getSubtasks());
+//        System.out.println("Epics: " + taskManager.getEpics());
+//        System.out.println();
+//        System.out.println("Tasks: " + taskManager.getTasks());
+//        System.out.println();
+//        System.out.println("Subtasks: " + taskManager.getSubtasks());
+//        System.out.println();
+
+        printHistory(taskManager);
         System.out.println();
 
         System.out.println("Измените статусы созданных объектов, распечатайте их. ");
@@ -50,6 +53,9 @@ public class Main {
         );
         taskManager.updateTask(task1_update);
         System.out.println("Task 1: " + taskManager.getTaskById(task1_id));
+        System.out.println();
+
+        printHistory(taskManager);
         System.out.println();
 
         Epic epic1_managed = taskManager.getEpicById(epic1_id);
@@ -94,6 +100,9 @@ public class Main {
         System.out.println("Epic 2: " + taskManager.getEpicById(epic2_id));
         System.out.println();
 
+        printHistory(taskManager);
+        System.out.println();
+
         System.out.println("И, наконец, попробуйте удалить одну из задач и один из эпиков.");
         System.out.println();
         taskManager.removeTaskById(task2_id);
@@ -106,6 +115,9 @@ public class Main {
         System.out.println("Subtasks: " + taskManager.getSubtasks());
         System.out.println();
 
+        System.out.println("История просмотра задач: " + taskManager.getHistory());
+        System.out.println();
+
         System.out.println("Проверка удаления всех подзадач.");
         System.out.println();
         taskManager.removeAllSubtasks();
@@ -113,5 +125,15 @@ public class Main {
         System.out.println();
         System.out.println("Epics: " + taskManager.getEpics());
         System.out.println();
+
+        printHistory(taskManager);
+        System.out.println();
+    }
+
+    private static void printHistory(TaskManager taskManager) {
+        System.out.println("История просмотра задач:");
+        for (Task historyItem : taskManager.getHistory()) {
+            System.out.println(historyItem);
+        }
     }
 }
