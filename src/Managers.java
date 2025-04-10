@@ -3,7 +3,7 @@ public class Managers {
         return new InMemoryTaskManager();
     }
 
-    HistoryManager getDefaultHistory() {
+    public HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
 }

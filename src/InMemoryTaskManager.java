@@ -184,7 +184,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpicStatus(Epic epicToUpdate) {
+    public ArrayList<Task> getHistory() {
+        return this.historyManager.getHistory();
+    }
+
+    private void updateEpicStatus(Epic epicToUpdate) {
         // если у эпика нет подзадач, то статус должен быть NEW.
         if (epicToUpdate.getSubtaskIds().isEmpty()) {
             epicToUpdate.setStatus(Status.NEW);
@@ -223,11 +227,6 @@ public class InMemoryTaskManager implements TaskManager {
             // во всех остальных случаях статус должен быть IN_PROGRESS.
             epicToUpdate.setStatus(Status.IN_PROGRESS);
         }
-    }
-
-    @Override
-    public HistoryManager getHistoryManager() {
-        return this.historyManager;
     }
 
     // единая точка генерации id для всех видов задач
