@@ -1,5 +1,8 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SubtaskTest {
@@ -18,6 +21,7 @@ class SubtaskTest {
         Managers taskManagerUtil = new Managers();
         TaskManager taskManager = taskManagerUtil.getDefault();
 
+        ArrayList<Integer> subtaskIds = new ArrayList<>();
         Epic epic = new Epic("name", "description");
         taskManager.addEpic(epic);
         int epicId = taskManager.getEpics().getLast().getId();
