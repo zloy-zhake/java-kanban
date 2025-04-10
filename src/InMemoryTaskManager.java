@@ -183,8 +183,7 @@ public class InMemoryTaskManager implements TaskManager {
         return epicSubtasks;
     }
 
-    @Override
-    public void updateEpicStatus(Epic epicToUpdate) {
+    private void updateEpicStatus(Epic epicToUpdate) {
         // если у эпика нет подзадач, то статус должен быть NEW.
         if (epicToUpdate.getSubtaskIds().isEmpty()) {
             epicToUpdate.setStatus(Status.NEW);
@@ -226,8 +225,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public HistoryManager getHistoryManager() {
-        return this.historyManager;
+    public ArrayList<Task> getHistory() {
+        return this.historyManager.getHistory();
     }
 
     // единая точка генерации id для всех видов задач

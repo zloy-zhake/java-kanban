@@ -10,7 +10,6 @@ class InMemoryHistoryManagerTest {
     void historyManagerSavesVersions() {
         Managers taskManagerUtil = new Managers();
         TaskManager taskManager = taskManagerUtil.getDefault();
-        HistoryManager historyManager = taskManager.getHistoryManager();
 
         Task task = new Task("name v1", "description V1");
         int taskId = taskManager.addTask(task);
@@ -19,7 +18,7 @@ class InMemoryHistoryManagerTest {
         taskManager.updateTask(taskUpdate);
         Task taskV2 = taskManager.getTaskById(taskId);
 
-        ArrayList<Task> history = historyManager.getHistory();
+        ArrayList<Task> history = taskManager.getHistory();
 
         assertEquals(history.get(0).getName(), taskV1.getName());
         assertEquals(history.get(0).getDescription(), taskV1.getDescription());
