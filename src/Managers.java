@@ -1,5 +1,5 @@
 public class Managers {
-    public TaskManager getDefault(){
+    public TaskManager getDefault() {
         return new InMemoryTaskManager();
     }
 

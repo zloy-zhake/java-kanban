@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class InMemoryHistoryManager implements HistoryManager {
     ArrayList<Task> taskHistory;
 
-    public InMemoryHistoryManager(){
+    public InMemoryHistoryManager() {
         taskHistory = new ArrayList<>();
     }
 
