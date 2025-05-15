@@ -19,4 +19,14 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         this.taskHistory.add(task);
     }
+
+    @Override
+    void remove(int id) {
+        for (Task task : taskHistory) {
+            if (task.getId() == id) {
+                this.taskHistory.remove(task);
+                break;
+            }
+        }
+    }
 }

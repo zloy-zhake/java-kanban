@@ -53,7 +53,9 @@ public class InMemoryTaskManager implements TaskManager {
         for (Subtask subtask : this.getSubtasks()) {
             Epic connectedEpic = this.getEpicById(subtask.getEpicId());
             epicsToUpdate.add(connectedEpic);
-            connectedEpic.removeSubtaskId(subtask.getId());
+            int subtaskId = subtask.getId();
+            connectedEpic.removeSubtaskId(subtaskId);
+            this.historyManager.remove(subtaskId);
         }
         for (Epic epic : epicsToUpdate) {
             this.updateEpicStatus(epic);
@@ -144,6 +146,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTaskById(int idToRemove) {
         this.tasks.remove(idToRemove);
+        this.historyManager.remove(idToRemove);
     }
 
     // при удалении подзадачи необходимо:
@@ -157,6 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
         connectedEpic.removeSubtaskId(idToRemove);
         this.updateEpicStatus(connectedEpic);
         this.subtasks.remove(idToRemove);
+        this.historyManager.remove(idToRemove);
     }
 
     // При удалении эпика необходимо:
@@ -171,6 +175,7 @@ public class InMemoryTaskManager implements TaskManager {
                 this.removeSubtaskById(subtaskToRemoveId);
             }
             this.epics.remove(idToRemove);
+            this.historyManager.remove(idToRemove);
         }
     }
 
