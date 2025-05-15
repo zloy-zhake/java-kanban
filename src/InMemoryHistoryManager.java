@@ -21,7 +21,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    void remove(int id) {
+    public void remove(int id) {
         for (Task task : taskHistory) {
             if (task.getId() == id) {
                 this.taskHistory.remove(task);
