@@ -208,7 +208,8 @@ public class InMemoryTaskManager implements TaskManager {
         // - подзадачи со статусом NEW
         // - подзадачи со статусом IN_PROGRESS
         // - подзадачи со статусом DONE
-        while (!hasNew && !hasInProgress && !hasDone && i < epicSubtaskIds.size()) {
+//        while (!hasNew && !hasInProgress && !hasDone && i < epicSubtaskIds.size()) {
+        while (i < epicSubtaskIds.size()) {
             Subtask curSubtask = this.getSubtaskById(epicSubtaskIds.get(i));
             switch (curSubtask.getStatus()) {
                 case Status.NEW:
