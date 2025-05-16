@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Collections;
 
 public class InMemoryHistoryManager implements HistoryManager {
-//    ArrayList<Node> taskHistory;
+    //    ArrayList<Node> taskHistory;
     HashMap<Integer, Node> taskHistory;
     Node lastNode;
 
@@ -38,8 +38,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (this.taskHistory.isEmpty()) {
             newNode = new Node(null, task, null);
             this.taskHistory.put(task.getId(), newNode);
-        }
-        else {
+        } else {
             Node prevNode = this.lastNode;
             newNode = new Node(prevNode, task, null);
             prevNode.setNextNode(newNode);
@@ -51,7 +50,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     ArrayList<Task> getTasks() {
         ArrayList<Task> result = new ArrayList<>();
         Node node = this.lastNode;
-        while (node != null){
+        while (node != null) {
             result.add(node.getTask());
             node = node.getPrevNode();
         }
