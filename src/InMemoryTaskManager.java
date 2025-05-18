@@ -240,6 +240,4 @@ public class InMemoryTaskManager implements TaskManager {
         this.nextTaskId++;
         return this.nextTaskId;
     }
-
-
 }
