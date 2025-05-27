@@ -22,5 +22,4 @@ class TaskTest {
         task.setStatus(Status.IN_PROGRESS);
         assertEquals(Status.IN_PROGRESS, task.getStatus());
     }
-
 }

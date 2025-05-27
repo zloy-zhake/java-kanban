@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InMemoryHistoryManagerTest {
     @Test
-    void historyManagerLinksTask(){
+    void historyManagerLinksTask() {
         Managers taskManagerUtil = new Managers();
         TaskManager taskManager = taskManagerUtil.getDefault();
         Task task = new Task("name v1", "description V1");
@@ -20,7 +20,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void historyManagerRemovesTask(){
+    void historyManagerRemovesTask() {
         Managers taskManagerUtil = new Managers();
         TaskManager taskManager = taskManagerUtil.getDefault();
         Task task = new Task("name v1", "description V1");
@@ -34,7 +34,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void historyManagerDoesNotDuplicateTask(){
+    void historyManagerDoesNotDuplicateTask() {
         Managers taskManagerUtil = new Managers();
         TaskManager taskManager = taskManagerUtil.getDefault();
         Task task = new Task("name v1", "description V1");

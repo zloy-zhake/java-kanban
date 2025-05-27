@@ -1,7 +1,6 @@
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     String backUpFilePath;
@@ -173,15 +172,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         int epic = Integer.parseInt(values[5]);
         Task result = new Task(name, description);
         switch (type) {
-            case "Task" -> {
-                result = new Task(name, description, id, status);
-            }
-            case "Epic" -> {
-                result = new Epic(name, description, id, status);
-            }
-            case "Subtask" -> {
-                result = new Subtask(name, description, id, status, epic);
-            }
+            case "Task" -> result = new Task(name, description, id, status);
+            case "Epic" -> result = new Epic(name, description, id, status);
+            case "Subtask" -> result = new Subtask(name, description, id, status, epic);
         }
         return result;
     }
