@@ -32,8 +32,7 @@ class ManagersTest {
         TaskManager taskManager = null;
         try {
             taskManager = managers.getFileBackedTaskManager(File.createTempFile("tasks", ".csv").getPath());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Ошибка при создании временного файла для тестов.");
         }
         assertNotNull(taskManager);
