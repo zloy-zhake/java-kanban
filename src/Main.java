@@ -4,7 +4,8 @@ public class Main {
         System.out.println("Поехали!");
         System.out.println();
         Managers taskManagerUtil = new Managers();
-        TaskManager taskManager = taskManagerUtil.getDefault();
+//        TaskManager taskManager = taskManagerUtil.getDefault();
+        TaskManager taskManager = taskManagerUtil.getFileBackedTaskManager("tasks.csv");
 
         System.out.println("Создайте две задачи, эпик с тремя подзадачами и эпик без подзадач.");
         System.out.println();

@@ -193,7 +193,7 @@ public class InMemoryTaskManager implements TaskManager {
         return this.historyManager.getHistory();
     }
 
-    private void updateEpicStatus(Epic epicToUpdate) {
+    protected void updateEpicStatus(Epic epicToUpdate) {
         // если у эпика нет подзадач, то статус должен быть NEW.
         if (epicToUpdate.getSubtaskIds().isEmpty()) {
             epicToUpdate.setStatus(Status.NEW);
