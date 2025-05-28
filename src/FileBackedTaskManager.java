@@ -13,7 +13,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.backUpFilePath = backUpFilePath;
     }
 
-    static FileBackedTaskManager loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) {
         String rawBackUp = "";
         try {
             rawBackUp = Files.readString(file.toPath());
