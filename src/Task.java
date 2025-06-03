@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -5,6 +7,8 @@ public class Task {
     private final String description;
     private int id;
     private Status status;
+    private LocalDateTime startTime;
+    private Duration duration;
 
     public Task(String name, String description) {
         this.name = name;
@@ -17,6 +21,23 @@ public class Task {
         this.description = description;
         this.id = id;
         this.status = status;
+    }
+
+    public Task(String name, String description, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.status = Status.NEW;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Task(String name, String description, int id, Status status, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public String getName() {
@@ -43,6 +64,26 @@ public class Task {
         this.status = status;
     }
 
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        return this.startTime.plus(this.duration);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -64,6 +105,8 @@ public class Task {
                 ", name='" + this.name + "'" +
                 ", description='" + this.description + "'" +
                 ", status=" + this.status +
+                ", startTime=" + this.startTime +
+                ", duration=" + this.duration +
                 '}';
     }
 }

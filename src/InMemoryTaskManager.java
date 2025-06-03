@@ -1,6 +1,9 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 
 public class InMemoryTaskManager implements TaskManager {
     int nextTaskId;
@@ -193,6 +196,8 @@ public class InMemoryTaskManager implements TaskManager {
         return this.historyManager.getHistory();
     }
 
+    // внутри updateEpicStatus() вызываем updateEpicDurationInfo(),
+    // так как оба методы должны вызывать в одних и тех же ситуациях
     protected void updateEpicStatus(Epic epicToUpdate) {
         // если у эпика нет подзадач, то статус должен быть NEW.
         if (epicToUpdate.getSubtaskIds().isEmpty()) {
@@ -233,6 +238,39 @@ public class InMemoryTaskManager implements TaskManager {
             // во всех остальных случаях статус должен быть IN_PROGRESS.
             epicToUpdate.setStatus(Status.IN_PROGRESS);
         }
+        this.updateEpicDurationInfo(epicToUpdate);
+    }
+
+    protected void updateEpicDurationInfo(Epic epicToUpdate){
+        this.updateEpicStartTime(epicToUpdate);
+        this.updateEpicEndTime(epicToUpdate);
+        this.updateEpicDuration(epicToUpdate);
+    }
+
+    protected void updateEpicStartTime(Epic epicToUpdate) {
+        epicToUpdate.setStartTime(
+                epicToUpdate.getSubtaskIds().stream()
+                        .map(this::getSubtaskById)
+                        .map(Task::getStartTime)
+                        .filter(Objects::nonNull)
+                        .min(LocalDateTime::compareTo)
+                        .orElse(null)
+        );
+    }
+
+    protected void updateEpicEndTime(Epic epicToUpdate) {
+        epicToUpdate.setEndTime(
+                epicToUpdate.getSubtaskIds().stream()
+                        .map(this::getSubtaskById)
+                        .map(Task::getStartTime)
+                        .filter(Objects::nonNull)
+                        .max(LocalDateTime::compareTo)
+                        .orElse(null)
+        );
+    }
+
+    protected void updateEpicDuration(Epic epicToUpdate) {
+        epicToUpdate.setDuration(Duration.between(epicToUpdate.getStartTime(), epicToUpdate.getEndTime()));
     }
 
     // единая точка генерации id для всех видов задач

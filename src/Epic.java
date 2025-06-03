@@ -1,7 +1,10 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
     private final ArrayList<Integer> subtaskIds;
+    private LocalDateTime endTime;
 
     Epic(String name, String description) {
         super(name, description);
@@ -16,6 +19,30 @@ public class Epic extends Task {
     Epic(String name, String description, int id, Status status, ArrayList<Integer> subtaskIds) {
         super(name, description, id, status);
         this.subtaskIds = subtaskIds;
+    }
+
+    Epic(String name, String description, LocalDateTime startTime, Duration duration) {
+        super(name, description, startTime, duration);
+        this.subtaskIds = new ArrayList<>();
+    }
+
+    Epic(String name, String description, int id, Status status, LocalDateTime startTime, Duration duration) {
+        super(name, description, id, status, startTime, duration);
+        this.subtaskIds = new ArrayList<>();
+    }
+
+    Epic(String name, String description, int id, Status status, LocalDateTime startTime, Duration duration, ArrayList<Integer> subtaskIds) {
+        super(name, description, id, status, startTime, duration);
+        this.subtaskIds = subtaskIds;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public ArrayList<Integer> getSubtaskIds() {
@@ -38,6 +65,8 @@ public class Epic extends Task {
                 ", description='" + this.getDescription() + "'" +
                 ", subtaskIds=" + this.subtaskIds +
                 ", status=" + this.getStatus() +
+                ", startTime=" + this.getStartTime() +
+                ", duration=" + this.getDuration() +
                 '}';
     }
 }
