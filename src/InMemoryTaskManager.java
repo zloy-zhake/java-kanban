@@ -1,9 +1,6 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     int nextTaskId;
@@ -11,6 +8,7 @@ public class InMemoryTaskManager implements TaskManager {
     HashMap<Integer, Subtask> subtasks;
     HashMap<Integer, Epic> epics;
     HistoryManager historyManager;
+    TreeSet<Task> prioritizedTasks;
 
     public InMemoryTaskManager() {
         this.nextTaskId = 0;
@@ -19,6 +17,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.epics = new HashMap<>();
         Managers managers = new Managers();
         this.historyManager = managers.getDefaultHistory();
+        this.prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     }
 
     @Override
@@ -39,12 +38,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeAllTasks() {
         this.tasks.clear();
+        this.updatePrioritizedTasks();
     }
 
     @Override
     public void removeAllEpics() {
         this.epics.clear();
         this.subtasks.clear();
+        this.updatePrioritizedTasks();
     }
 
     // В методе для удаления подзадач необходимо очищать все подзадачи из коллекции, в которой они хранятся,
@@ -64,6 +65,7 @@ public class InMemoryTaskManager implements TaskManager {
             this.updateEpicStatus(epic);
         }
         this.subtasks.clear();
+        this.updatePrioritizedTasks();
     }
 
     @Override
@@ -100,6 +102,7 @@ public class InMemoryTaskManager implements TaskManager {
     public int addTask(Task newTask) {
         newTask.setId(this.getNextId());
         this.tasks.put(newTask.getId(), newTask);
+        this.updatePrioritizedTasks();
         return newTask.getId();
     }
 
@@ -115,6 +118,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic connectedEpic = getEpicById(newSubtask.getEpicId());
         connectedEpic.addSubtaskId(newSubtask.getId());
         this.updateEpicStatus(connectedEpic);
+        this.updatePrioritizedTasks();
         return newSubtask.getId();
     }
 
@@ -128,6 +132,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task newTask) {
         this.tasks.put(newTask.getId(), newTask);
+        this.updatePrioritizedTasks();
     }
 
     // при обновлении подзадачи необходимо:
@@ -138,6 +143,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.subtasks.put(newSubtask.getId(), newSubtask);
         Epic epicToUpdate = this.getEpicById(newSubtask.getEpicId());
         this.updateEpicStatus(epicToUpdate);
+        this.updatePrioritizedTasks();
     }
 
     @Override
@@ -150,6 +156,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeTaskById(int idToRemove) {
         this.tasks.remove(idToRemove);
         this.historyManager.remove(idToRemove);
+        this.updatePrioritizedTasks();
     }
 
     // при удалении подзадачи необходимо:
@@ -164,6 +171,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.updateEpicStatus(connectedEpic);
         this.subtasks.remove(idToRemove);
         this.historyManager.remove(idToRemove);
+        this.updatePrioritizedTasks();
     }
 
     // При удалении эпика необходимо:
@@ -179,6 +187,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
             this.epics.remove(idToRemove);
             this.historyManager.remove(idToRemove);
+            this.updatePrioritizedTasks();
         }
     }
 
@@ -194,6 +203,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public ArrayList<Task> getHistory() {
         return this.historyManager.getHistory();
+    }
+
+    @Override
+    public ArrayList<Task> getPrioritizedTasks() {
+        return new ArrayList<>(this.prioritizedTasks);
     }
 
     // внутри updateEpicStatus() вызываем updateEpicDurationInfo(),
@@ -281,5 +295,20 @@ public class InMemoryTaskManager implements TaskManager {
     private int getNextId() {
         this.nextTaskId++;
         return this.nextTaskId;
+    }
+
+    private void updatePrioritizedTasks() {
+        for (Task task : this.getTasks()) {
+            if (task.getStartTime() != null) {
+                this.prioritizedTasks.remove(task);
+                this.prioritizedTasks.add(task);
+            }
+        }
+        for (Subtask subtask : this.getSubtasks()) {
+            if (subtask.getStartTime() != null) {
+                this.prioritizedTasks.remove(subtask);
+                this.prioritizedTasks.add(subtask);
+            }
+        }
     }
 }
