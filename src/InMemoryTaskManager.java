@@ -262,7 +262,7 @@ public class InMemoryTaskManager implements TaskManager {
         epicToUpdate.setEndTime(
                 epicToUpdate.getSubtaskIds().stream()
                         .map(this::getSubtaskById)
-                        .map(Task::getStartTime)
+                        .map(Task::getEndTime)
                         .filter(Objects::nonNull)
                         .max(LocalDateTime::compareTo)
                         .orElse(null)

@@ -1,5 +1,8 @@
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -30,5 +33,20 @@ class SubtaskTest {
         Subtask subtaskUpdated = new Subtask("name2", "description2", subtaskId, Status.NEW, subtaskId);
 
         assertThrows(NullPointerException.class, () -> taskManager.updateSubtask(subtaskUpdated));
+    }
+
+    @Test
+    void testTimeRelatedFields() {
+        LocalDateTime startTime = LocalDateTime.of(2025, 1, 1, 0, 0);
+        Duration duration = Duration.ofHours(1);
+        Subtask subtask = new Subtask("name1", "description1", 1, Status.NEW, startTime, duration, 2);
+        LocalDateTime newStartTime = LocalDateTime.of(2025, 6, 5, 12, 34);
+        subtask.setStartTime(newStartTime);
+        assertEquals(newStartTime, subtask.getStartTime());
+        Duration newDuration = Duration.ofHours(2);
+        subtask.setDuration(newDuration);
+        assertEquals(newDuration, subtask.getDuration());
+        LocalDateTime expectedEndTime = LocalDateTime.of(2025, 6, 5, 14, 34);
+        assertEquals(expectedEndTime, subtask.getEndTime());
     }
 }

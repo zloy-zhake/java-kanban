@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,6 +36,28 @@ class EpicTest {
         taskManager.removeSubtaskById(subtask_1_2_id);
         assertTrue(epic1.getSubtaskIds().contains(subtask_1_1_id));
         assertFalse(epic1.getSubtaskIds().contains(subtask_1_2_id));
+    }
+
+    @Test
+    void testTimeRelatedFields() {
+        Managers taskManagerUtil = new Managers();
+        TaskManager taskManager = taskManagerUtil.getDefault();
+        Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
+        int epic1_id = taskManager.addEpic(epic1);
+        LocalDateTime st1StartTime = LocalDateTime.of(2025, 1, 1, 0, 0);
+        Duration st1Duration = Duration.ofHours(1);
+        LocalDateTime st2StartTime = LocalDateTime.of(2025, 1, 1, 1, 0);
+        Duration st2Duration = Duration.ofHours(1);
+        Subtask subtask_1_1 = new Subtask("Подзадача 1-1", "Описание подзадачи 1-1.", st1StartTime, st1Duration, epic1_id);
+        int subtask_1_1_id = taskManager.addSubtask(subtask_1_1);
+        Subtask subtask_1_2 = new Subtask("Подзадача 1-2", "Описание подзадачи 1-2.", st2StartTime, st2Duration, epic1_id);
+        int subtask_1_2_id = taskManager.addSubtask(subtask_1_2);
+        LocalDateTime expectedStartTime = LocalDateTime.of(2025, 1, 1, 0, 0);
+        Duration expectedDuration = Duration.ofHours(2);
+        LocalDateTime expectedEndTime = LocalDateTime.of(2025, 1, 1, 2, 0);
+        assertEquals(expectedStartTime, epic1.getStartTime());
+        assertEquals(expectedDuration, epic1.getDuration());
+        assertEquals(expectedEndTime, epic1.getEndTime());
     }
 
     // проверьте, что объект Epic нельзя добавить в самого себя в виде подзадачи;
