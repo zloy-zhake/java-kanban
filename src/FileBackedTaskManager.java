@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     String backUpFilePath;
@@ -176,15 +177,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private Task fromString(String value) {
-        String[] values = value.split(",");
+        String[] values = value.split(",", -1);
         int id = Integer.parseInt(values[0]);
         String type = values[1];
         String name = values[2];
         Status status = Status.valueOf(values[3]);
         String description = values[4];
-        LocalDateTime startTime = LocalDateTime.parse(values[6]);
-        Duration duration = Duration.parse(values[7]);
-
+        LocalDateTime startTime = null;
+        String startTimeFromFile = values[6];
+        if (!Objects.equals(startTimeFromFile, "")) {
+            startTime = LocalDateTime.parse(values[6]);
+        }
+        Duration duration = null;
+        String durationFromFile = values[7];
+        if (!Objects.equals(durationFromFile, "")) {
+            duration = Duration.parse(values[7]);
+        }
         Task result = new Task(name, description);
         switch (type) {
             case "Task" -> result = new Task(name, description, id, status, startTime, duration);
