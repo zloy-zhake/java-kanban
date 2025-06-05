@@ -270,7 +270,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     protected void updateEpicDuration(Epic epicToUpdate) {
-        epicToUpdate.setDuration(Duration.between(epicToUpdate.getStartTime(), epicToUpdate.getEndTime()));
+        if (epicToUpdate.getStartTime() == null || epicToUpdate.getEndTime() == null) {
+            epicToUpdate.setDuration(null);
+        } else {
+            epicToUpdate.setDuration(Duration.between(epicToUpdate.getStartTime(), epicToUpdate.getEndTime()));
+        }
     }
 
     // единая точка генерации id для всех видов задач
