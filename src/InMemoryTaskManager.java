@@ -1,6 +1,7 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     int nextTaskId;
@@ -53,17 +54,15 @@ public class InMemoryTaskManager implements TaskManager {
     // при этом необходимо обновить статус соответствующих эпиков
     @Override
     public void removeAllSubtasks() {
-        HashSet<Epic> epicsToUpdate = new HashSet<>();
-        for (Subtask subtask : this.getSubtasks()) {
-            Epic connectedEpic = this.getEpicById(subtask.getEpicId());
-            epicsToUpdate.add(connectedEpic);
-            int subtaskId = subtask.getId();
-            connectedEpic.removeSubtaskId(subtaskId);
-            this.historyManager.remove(subtaskId);
-        }
-        for (Epic epic : epicsToUpdate) {
-            this.updateEpicStatus(epic);
-        }
+        HashSet<Epic> epicsToUpdate = this.getSubtasks().stream()
+                .peek(subtask -> this.historyManager.remove(subtask.getId()))
+                .map(subtask -> {
+                    Epic connectedEpic = this.getEpicById(subtask.getEpicId());
+                    connectedEpic.removeSubtaskId(subtask.getId());
+                    return connectedEpic;
+                })
+                .collect(Collectors.toCollection(HashSet::new));
+        epicsToUpdate.forEach(this::updateEpicStatus);
         this.subtasks.clear();
         this.updatePrioritizedTasks();
     }
@@ -198,12 +197,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Subtask> getSubtasksOfEpic(Epic epic) {
-        ArrayList<Subtask> epicSubtasks = new ArrayList<>();
-        for (Integer subtaskId : epic.getSubtaskIds()) {
-            epicSubtasks.add(this.getSubtaskById(subtaskId));
-        }
-        return epicSubtasks;
+    public List<Subtask> getSubtasksOfEpic(Epic epic) {
+        return epic.getSubtaskIds().stream()
+                .map(this::getSubtaskById)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -261,7 +258,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.updateEpicDurationInfo(epicToUpdate);
     }
 
-    protected void updateEpicDurationInfo(Epic epicToUpdate){
+    protected void updateEpicDurationInfo(Epic epicToUpdate) {
         this.updateEpicStartTime(epicToUpdate);
         this.updateEpicEndTime(epicToUpdate);
         this.updateEpicDuration(epicToUpdate);
