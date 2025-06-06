@@ -196,8 +196,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Task result = new Task(name, description);
         switch (type) {
             case "Task" -> result = new Task(name, description, id, status, startTime, duration);
-            case "Epic" ->
-                result = new Epic(name, description, id, status, startTime, duration);
+            case "Epic" -> result = new Epic(name, description, id, status, startTime, duration);
             case "Subtask" -> {
                 int epic = Integer.parseInt(values[5]);
                 result = new Subtask(name, description, id, status, epic);

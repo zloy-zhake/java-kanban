@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -9,18 +8,18 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>{
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     static String tmpFilePath;
+
     @Override
     FileBackedTaskManager createTaskManager() {
         Managers taskManagerUtil = new Managers();
         try {
             tmpFilePath = File.createTempFile("tasks", ".csv").getPath();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Ошибка при создании временного файла для тестов.");
         }
-        return  (FileBackedTaskManager) taskManagerUtil.getFileBackedTaskManager(tmpFilePath);
+        return (FileBackedTaskManager) taskManagerUtil.getFileBackedTaskManager(tmpFilePath);
     }
 
     // сохранение и загрузка пустого файла;
@@ -29,17 +28,15 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>{
         Managers taskManagerUtil = new Managers();
         try {
             tmpFilePath = File.createTempFile("empty_tasks", ".csv").getPath();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Ошибка при создании временного файла для тестов.");
         }
-        FileBackedTaskManager emptyTaskManager = (FileBackedTaskManager) taskManagerUtil.getFileBackedTaskManager(tmpFilePath);
         File fileObj = new File(tmpFilePath);
 
         assertTrue(fileObj.exists());
         assertEquals(0, fileObj.length());
 
-        emptyTaskManager = FileBackedTaskManager.loadFromFile(fileObj);
+        FileBackedTaskManager emptyTaskManager = FileBackedTaskManager.loadFromFile(fileObj);
 
         assertNotNull(emptyTaskManager);
         assertNotNull(emptyTaskManager.getTasks());
@@ -53,11 +50,10 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>{
         Managers taskManagerUtil = new Managers();
         try {
             tmpFilePath = File.createTempFile("empty_tasks", ".csv").getPath();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Ошибка при создании временного файла для тестов.");
         }
-        taskManager = (FileBackedTaskManager) taskManagerUtil.getFileBackedTaskManager(tmpFilePath);
+        taskManager = taskManagerUtil.getFileBackedTaskManager(tmpFilePath);
         task1 = new Task("task name 1", "task description 1");
         taskId1 = taskManager.addTask(task1);
         Task task2 = new Task("task name 2", "task description 2");
@@ -65,8 +61,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>{
         long linesCount = 0;
         try {
             linesCount = Files.lines(Paths.get(tmpFilePath), Charset.defaultCharset()).count();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Ошибка при чтении временного файла для тестов.");
         }
 
@@ -79,11 +74,10 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>{
         Managers taskManagerUtil = new Managers();
         try {
             tmpFilePath = File.createTempFile("empty_tasks", ".csv").getPath();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Ошибка при создании временного файла для тестов.");
         }
-        taskManager = (FileBackedTaskManager) taskManagerUtil.getFileBackedTaskManager(tmpFilePath);
+        taskManager = taskManagerUtil.getFileBackedTaskManager(tmpFilePath);
         task1 = new Task("task name 1", "task description 1");
         taskId1 = taskManager.addTask(task1);
         Task task2 = new Task("task name 2", "task description 2");

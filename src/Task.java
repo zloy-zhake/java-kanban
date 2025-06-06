@@ -64,12 +64,12 @@ public class Task {
         this.status = status;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
     public LocalDateTime getStartTime() {
         return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public Duration getDuration() {
@@ -124,9 +124,6 @@ public class Task {
         if (task1Start.isAfter(task2Start) && task1Start.isBefore(task2End)) {
             return true;
         }
-        if (task2Start.isAfter(task1Start) && task2Start.isBefore(task1End)) {
-            return true;
-        }
-        return false;
+        return task2Start.isAfter(task1Start) && task2Start.isBefore(task1End);
     }
 }
