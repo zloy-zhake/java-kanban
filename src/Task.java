@@ -112,4 +112,21 @@ public class Task {
                 ", duration=" + this.duration +
                 '}';
     }
+
+    public boolean isOverlapped(Task otherTask) {
+        LocalDateTime task1Start = this.getStartTime();
+        LocalDateTime task1End = this.getEndTime();
+        LocalDateTime task2Start = otherTask.getStartTime();
+        LocalDateTime task2End = otherTask.getEndTime();
+        if (task1Start == null || task1End == null || task2Start == null || task2End == null) {
+            return false;
+        }
+        if (task1Start.isAfter(task2Start) && task1Start.isBefore(task2End)) {
+            return true;
+        }
+        if (task2Start.isAfter(task1Start) && task2Start.isBefore(task1End)) {
+            return true;
+        }
+        return false;
+    }
 }

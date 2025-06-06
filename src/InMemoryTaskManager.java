@@ -100,6 +100,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addTask(Task newTask) {
+        if (this.isConflictingTask(newTask)) {
+            return -1;
+        }
         newTask.setId(this.getNextId());
         this.tasks.put(newTask.getId(), newTask);
         this.updatePrioritizedTasks();
@@ -113,6 +116,9 @@ public class InMemoryTaskManager implements TaskManager {
     // - пересчитать статус связанного эпика
     @Override
     public int addSubtask(Subtask newSubtask) {
+        if (this.isConflictingTask(newSubtask)) {
+            return -1;
+        }
         newSubtask.setId(this.getNextId());
         this.subtasks.put(newSubtask.getId(), newSubtask);
         Epic connectedEpic = getEpicById(newSubtask.getEpicId());
@@ -311,4 +317,13 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
     }
+
+    private boolean isConflictingTask(Task newTask) {
+        boolean hasTaskConflict = this.getTasks().stream()
+                .anyMatch(task -> task.isOverlapped(newTask));
+        boolean hasSubtaskConflict = this.getSubtasks().stream()
+                .anyMatch(subtask -> subtask.isOverlapped(newTask));
+        return hasTaskConflict && hasSubtaskConflict;
+    }
+
 }
