@@ -49,4 +49,20 @@ class SubtaskTest {
         LocalDateTime expectedEndTime = LocalDateTime.of(2025, 6, 5, 14, 34);
         assertEquals(expectedEndTime, subtask.getEndTime());
     }
+
+    // Для подзадач необходимо дополнительно убедиться в наличии связанного эпика.
+    @Test
+    void testConnectedEpicExists() {
+        Managers taskManagerUtil = new Managers();
+        TaskManager taskManager = taskManagerUtil.getDefault();
+
+        Epic epic = new Epic("name", "description");
+        taskManager.addEpic(epic);
+        int epicId = taskManager.getEpics().getLast().getId();
+
+        Subtask subtask = new Subtask("name1", "description1", epicId);
+        taskManager.addSubtask(subtask);
+
+        assertEquals(epicId, subtask.getEpicId());
+    }
 }

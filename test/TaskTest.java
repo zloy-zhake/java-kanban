@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {
 
@@ -39,5 +39,25 @@ class TaskTest {
         assertEquals(newDuration, task.getDuration());
         LocalDateTime expectedEndTime = LocalDateTime.of(2025, 6, 5, 14, 34);
         assertEquals(expectedEndTime, task.getEndTime());
+    }
+
+    // Убедиться, что реализован корректный расчёт пересечения временных интервалов задач,
+    // чтобы предотвратить конфликтные ситуации.
+    @Test
+    void testIsOverlapped() {
+        LocalDateTime startTime1 = LocalDateTime.of(2025, 6, 6, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2025, 6, 6, 1, 30);
+        LocalDateTime startTime3 = LocalDateTime.of(2025, 6, 6, 2, 0);
+        Duration duration = Duration.ofHours(1);
+        Task task1 = new Task("name1", "description1", 1, Status.NEW, startTime1, duration);
+        Task task2 = new Task("name2", "description2", 2, Status.NEW, startTime2, duration);
+        Task task3 = new Task("name3", "description3", 3, Status.NEW, startTime3, duration);
+
+        assertFalse(task1.isOverlapped(task3));
+        assertFalse(task3.isOverlapped(task1));
+        assertTrue(task1.isOverlapped(task2));
+        assertTrue(task2.isOverlapped(task1));
+        assertTrue(task2.isOverlapped(task3));
+        assertTrue(task3.isOverlapped(task2));
     }
 }
