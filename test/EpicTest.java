@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,6 +38,64 @@ class EpicTest {
         assertFalse(epic1.getSubtaskIds().contains(subtask_1_2_id));
     }
 
+    @Test
+    void testTimeRelatedFields() {
+        Managers taskManagerUtil = new Managers();
+        TaskManager taskManager = taskManagerUtil.getDefault();
+        Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
+        int epic1_id = taskManager.addEpic(epic1);
+        LocalDateTime st1StartTime = LocalDateTime.of(2025, 1, 1, 0, 0);
+        Duration st1Duration = Duration.ofHours(1);
+        LocalDateTime st2StartTime = LocalDateTime.of(2025, 1, 1, 1, 0);
+        Duration st2Duration = Duration.ofHours(1);
+        Subtask subtask_1_1 = new Subtask("Подзадача 1-1", "Описание подзадачи 1-1.", st1StartTime, st1Duration, epic1_id);
+        int subtask_1_1_id = taskManager.addSubtask(subtask_1_1);
+        Subtask subtask_1_2 = new Subtask("Подзадача 1-2", "Описание подзадачи 1-2.", st2StartTime, st2Duration, epic1_id);
+        int subtask_1_2_id = taskManager.addSubtask(subtask_1_2);
+        LocalDateTime expectedStartTime = LocalDateTime.of(2025, 1, 1, 0, 0);
+        Duration expectedDuration = Duration.ofHours(2);
+        LocalDateTime expectedEndTime = LocalDateTime.of(2025, 1, 1, 2, 0);
+        assertEquals(expectedStartTime, epic1.getStartTime());
+        assertEquals(expectedDuration, epic1.getDuration());
+        assertEquals(expectedEndTime, epic1.getEndTime());
+    }
+
+
+    // Для эпиков нужно проверить корректность расчёта статуса на основании состояния подзадач.
+    @Test
+    void testEpicStatuses() {
+        Managers taskManagerUtil = new Managers();
+        TaskManager taskManager = taskManagerUtil.getDefault();
+        Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
+        int epic1_id = taskManager.addEpic(epic1);
+
+        // a. Все подзадачи со статусом NEW.
+        Subtask subtask_1_1 = new Subtask("Подзадача 1-1", "Описание подзадачи 1-1.", epic1_id);
+        int subtask_1_1_id = taskManager.addSubtask(subtask_1_1);
+        Subtask subtask_1_2 = new Subtask("Подзадача 1-2", "Описание подзадачи 1-2.", epic1_id);
+        int subtask_1_2_id = taskManager.addSubtask(subtask_1_2);
+        assertEquals(Status.NEW, epic1.getStatus());
+
+        // b. Все подзадачи со статусом DONE.
+        subtask_1_1.setStatus(Status.DONE);
+        subtask_1_2.setStatus(Status.DONE);
+        taskManager.updateSubtask(subtask_1_1);
+        taskManager.updateSubtask(subtask_1_2);
+        assertEquals(Status.DONE, epic1.getStatus());
+
+        // c. Подзадачи со статусами NEW и DONE.
+        subtask_1_1.setStatus(Status.NEW);
+        taskManager.updateSubtask(subtask_1_1);
+        assertEquals(Status.IN_PROGRESS, epic1.getStatus());
+
+        // d. Подзадачи со статусом IN_PROGRESS.
+        subtask_1_1.setStatus(Status.IN_PROGRESS);
+        subtask_1_2.setStatus(Status.IN_PROGRESS);
+        taskManager.updateSubtask(subtask_1_1);
+        taskManager.updateSubtask(subtask_1_2);
+        assertEquals(Status.IN_PROGRESS, epic1.getStatus());
+    }
+
     // проверьте, что объект Epic нельзя добавить в самого себя в виде подзадачи;
     // при добавлении эпика в эпик происходит ошибка компиляции
     // @Test
@@ -49,5 +109,4 @@ class EpicTest {
     //     taskManager.addEpic(epic);
     //     taskManager.addSubtask(epic);
     // }
-
 }
