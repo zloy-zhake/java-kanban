@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test;
+import taskmanager.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -8,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SubtaskTest {
 
-    // проверьте, что наследники класса Task равны друг другу, если равен их id;
+    // проверьте, что наследники класса taskmanager.Task равны друг другу, если равен их id;
     @Test
     void testSubtasksEquals() {
         Subtask subtask1 = new Subtask("name1", "description1", 1, Status.NEW, 1);
@@ -16,7 +17,7 @@ class SubtaskTest {
         assertEquals(subtask1, subtask2);
     }
 
-    // проверьте, что объект Subtask нельзя сделать своим же эпиком;
+    // проверьте, что объект taskmanager.Subtask нельзя сделать своим же эпиком;
     @Test()
     void testSubtaskCannotBeEpic() {
         Managers taskManagerUtil = new Managers();

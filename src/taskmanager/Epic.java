@@ -1,3 +1,5 @@
+package taskmanager;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,7 +61,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
+        return "taskmanager.Epic{" +
                 "id=" + this.getId() +
                 ", name='" + this.getName() + "'" +
                 ", description='" + this.getDescription() + "'" +

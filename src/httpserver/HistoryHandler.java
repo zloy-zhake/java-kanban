@@ -3,10 +3,22 @@ package httpserver;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import taskmanager.TaskManager;
 
-public class HistoryHandler implements HttpHandler {
+import java.io.IOException;
+
+public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
+    public HistoryHandler(TaskManager taskManager) {
+        super(taskManager);
+    }
+
     @Override
-    public void handle(HttpExchange exchange) {
-        Gson gson = new Gson();
+    public void handle(HttpExchange exchange) throws IOException {
+        String method = exchange.getRequestMethod();
+        if (!method.equals("GET")) {
+            this.sendMethodNotAllowed(exchange, "/history поддерживает только метод GET.");
+        }
+        String result = this.taskManager.getHistory().toString();
+        this.sendText(exchange, result);
     }
 }

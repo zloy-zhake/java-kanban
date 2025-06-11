@@ -1,3 +1,5 @@
+package taskmanager;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -169,7 +171,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (task.getDuration() != null) {
             duration = task.getDuration().toString();
         }
-        if (type.equals("Subtask")) {
+        if (type.equals("taskmanager.Subtask")) {
             Subtask st = (Subtask) task;
             epic = String.valueOf(st.getEpicId());
         }
@@ -195,9 +197,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
         Task result = new Task(name, description);
         switch (type) {
-            case "Task" -> result = new Task(name, description, id, status, startTime, duration);
-            case "Epic" -> result = new Epic(name, description, id, status, startTime, duration);
-            case "Subtask" -> {
+            case "taskmanager.Task" -> result = new Task(name, description, id, status, startTime, duration);
+            case "taskmanager.Epic" -> result = new Epic(name, description, id, status, startTime, duration);
+            case "taskmanager.Subtask" -> {
                 int epic = Integer.parseInt(values[5]);
                 result = new Subtask(name, description, id, status, epic);
             }

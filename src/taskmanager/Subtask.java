@@ -1,3 +1,5 @@
+package taskmanager;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -30,7 +32,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
+        return "taskmanager.Subtask{" +
                 "epicId=" + this.epicId +
                 ", id=" + this.getId() +
                 ", name='" + this.getName() + "'" +

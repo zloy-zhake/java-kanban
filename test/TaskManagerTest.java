@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import taskmanager.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -29,7 +30,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         subtaskId1 = taskManager.addSubtask(subtask1);
     }
 
-    // проверьте, что InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
+    // проверьте, что taskmanager.InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
     @Test
     void testAddTask() {
         Task task = new Task("name", "description");

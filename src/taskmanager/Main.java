@@ -1,10 +1,12 @@
+package taskmanager;
+
 public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
         System.out.println();
         Managers taskManagerUtil = new Managers();
-//        TaskManager taskManager = taskManagerUtil.getDefault();
+//        taskmanager.TaskManager taskManager = taskManagerUtil.getDefault();
         TaskManager taskManager = taskManagerUtil.getFileBackedTaskManager("tasks.csv");
 
         System.out.println("Создайте две задачи, эпик с тремя подзадачами и эпик без подзадач.");
@@ -55,21 +57,21 @@ public class Main {
 //        System.out.println("Создайте две задачи, а также эпик с двумя подзадачами и эпик с одной подзадачей.");
 //        System.out.println("Распечатайте списки эпиков, задач и подзадач через System.out.println(..)");
 //        System.out.println();
-//        Task task1 = new Task("Задача 1", "Описание задачи 1.");
+//        taskmanager.Task task1 = new taskmanager.Task("Задача 1", "Описание задачи 1.");
 //        int task1_id = taskManager.addTask(task1);
-//        Task task2 = new Task("Задача 2", "Описание задачи 2.");
+//        taskmanager.Task task2 = new taskmanager.Task("Задача 2", "Описание задачи 2.");
 //        int task2_id = taskManager.addTask(task2);
 //
-//        Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
+//        taskmanager.Epic epic1 = new taskmanager.Epic("Эпик 1", "Описание эпика 1");
 //        int epic1_id = taskManager.addEpic(epic1);
-//        Subtask subtask_1_1 = new Subtask("Подзадача 1-1", "Описание подзадачи 1-1.", epic1_id);
+//        taskmanager.Subtask subtask_1_1 = new taskmanager.Subtask("Подзадача 1-1", "Описание подзадачи 1-1.", epic1_id);
 //        int subtask_1_1_id = taskManager.addSubtask(subtask_1_1);
-//        Subtask subtask_1_2 = new Subtask("Подзадача 1-2", "Описание подзадачи 1-2.", epic1_id);
+//        taskmanager.Subtask subtask_1_2 = new taskmanager.Subtask("Подзадача 1-2", "Описание подзадачи 1-2.", epic1_id);
 //        int subtask_1_2_id = taskManager.addSubtask(subtask_1_2);
 //
-//        Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
+//        taskmanager.Epic epic2 = new taskmanager.Epic("Эпик 2", "Описание эпика 2");
 //        int epic2_id = taskManager.addEpic(epic2);
-//        Subtask subtask_2_1 = new Subtask("Подзадача 2-1", "Описание подзадачи 2-1.", epic2_id);
+//        taskmanager.Subtask subtask_2_1 = new taskmanager.Subtask("Подзадача 2-1", "Описание подзадачи 2-1.", epic2_id);
 //        int subtask_2_1_id = taskManager.addSubtask(subtask_2_1);
 //
 //        System.out.println("Epics: " + taskManager.getEpics());
@@ -87,63 +89,63 @@ public class Main {
 //                "Проверьте, что статус задачи и подзадачи сохранился, а статус эпика рассчитался по статусам подзадач."
 //        );
 //        System.out.println();
-//        Task task1_managed = taskManager.getTaskById(task1_id);
-//        Task task1_update = new Task(
-//                task1_managed.getName(), task1_managed.getDescription(), task1_managed.getId(), Status.IN_PROGRESS
+//        taskmanager.Task task1_managed = taskManager.getTaskById(task1_id);
+//        taskmanager.Task task1_update = new taskmanager.Task(
+//                task1_managed.getName(), task1_managed.getDescription(), task1_managed.getId(), taskmanager.Status.IN_PROGRESS
 //        );
 //        taskManager.updateTask(task1_update);
-//        System.out.println("Task 1: " + taskManager.getTaskById(task1_id));
+//        System.out.println("taskmanager.Task 1: " + taskManager.getTaskById(task1_id));
 //        System.out.println();
-//        task1_update = new Task(
-//                task1_managed.getName(), task1_managed.getDescription(), task1_managed.getId(), Status.DONE
+//        task1_update = new taskmanager.Task(
+//                task1_managed.getName(), task1_managed.getDescription(), task1_managed.getId(), taskmanager.Status.DONE
 //        );
 //        taskManager.updateTask(task1_update);
-//        System.out.println("Task 1: " + taskManager.getTaskById(task1_id));
+//        System.out.println("taskmanager.Task 1: " + taskManager.getTaskById(task1_id));
 //        System.out.println();
 //
 //        printHistory(taskManager);
 //        System.out.println();
 //
-//        Epic epic1_managed = taskManager.getEpicById(epic1_id);
-//        Epic epic1_update = new Epic(
+//        taskmanager.Epic epic1_managed = taskManager.getEpicById(epic1_id);
+//        taskmanager.Epic epic1_update = new taskmanager.Epic(
 //                epic1_managed.getName(),
 //                epic1_managed.getDescription(),
 //                epic1_managed.getId(),
-//                Status.IN_PROGRESS,
+//                taskmanager.Status.IN_PROGRESS,
 //                epic1_managed.getSubtaskIds());
 //        taskManager.updateEpic(epic1_update);
-//        System.out.println("Epic 1: " + epic1);
+//        System.out.println("taskmanager.Epic 1: " + epic1);
 //        System.out.println();
-//        epic1_update = new Epic(
+//        epic1_update = new taskmanager.Epic(
 //                epic1_managed.getName(),
 //                epic1_managed.getDescription(),
 //                epic1_managed.getId(),
-//                Status.DONE,
+//                taskmanager.Status.DONE,
 //                epic1_managed.getSubtaskIds());
 //        taskManager.updateEpic(epic1_update);
-//        System.out.println("Epic 1: " + epic1);
+//        System.out.println("taskmanager.Epic 1: " + epic1);
 //        System.out.println();
 //
-//        Subtask subtask_2_1_managed = taskManager.getSubtaskById(subtask_2_1_id);
-//        Subtask subtask_2_1_update = new Subtask(
+//        taskmanager.Subtask subtask_2_1_managed = taskManager.getSubtaskById(subtask_2_1_id);
+//        taskmanager.Subtask subtask_2_1_update = new taskmanager.Subtask(
 //                subtask_2_1_managed.getName(),
 //                subtask_2_1_managed.getDescription(),
 //                subtask_2_1_managed.getId(),
-//                Status.IN_PROGRESS,
+//                taskmanager.Status.IN_PROGRESS,
 //                subtask_2_1_managed.getEpicId());
 //        taskManager.updateSubtask(subtask_2_1_update);
-//        System.out.println("Subtask 2-1: " + taskManager.getSubtaskById(subtask_2_1_id));
-//        System.out.println("Epic 2: " + taskManager.getEpicById(epic2_id));
+//        System.out.println("taskmanager.Subtask 2-1: " + taskManager.getSubtaskById(subtask_2_1_id));
+//        System.out.println("taskmanager.Epic 2: " + taskManager.getEpicById(epic2_id));
 //        System.out.println();
-//        subtask_2_1_update = new Subtask(
+//        subtask_2_1_update = new taskmanager.Subtask(
 //                subtask_2_1_managed.getName(),
 //                subtask_2_1_managed.getDescription(),
 //                subtask_2_1_managed.getId(),
-//                Status.DONE,
+//                taskmanager.Status.DONE,
 //                subtask_2_1_managed.getEpicId());
 //        taskManager.updateSubtask(subtask_2_1_update);
-//        System.out.println("Subtask 2-1: " + taskManager.getSubtaskById(subtask_2_1_id));
-//        System.out.println("Epic 2: " + taskManager.getEpicById(epic2_id));
+//        System.out.println("taskmanager.Subtask 2-1: " + taskManager.getSubtaskById(subtask_2_1_id));
+//        System.out.println("taskmanager.Epic 2: " + taskManager.getEpicById(epic2_id));
 //        System.out.println();
 //
 //        printHistory(taskManager);

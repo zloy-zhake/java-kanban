@@ -1,3 +1,5 @@
+package taskmanager;
+
 public class Node {
     Node prevNode;
     Task task;

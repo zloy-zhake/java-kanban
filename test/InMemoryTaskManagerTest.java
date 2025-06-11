@@ -1,3 +1,6 @@
+import taskmanager.InMemoryTaskManager;
+import taskmanager.Managers;
+
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     @Override
     InMemoryTaskManager createTaskManager() {

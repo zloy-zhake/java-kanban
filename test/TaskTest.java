@@ -1,4 +1,6 @@
 import org.junit.jupiter.api.Test;
+import taskmanager.Status;
+import taskmanager.Task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -7,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {
 
-    // проверьте, что экземпляры класса Task равны друг другу, если равен их id;
+    // проверьте, что экземпляры класса taskmanager.Task равны друг другу, если равен их id;
     @Test
     void testTasksEquals() {
         Task task1 = new Task("name1", "description1", 1, Status.NEW);
