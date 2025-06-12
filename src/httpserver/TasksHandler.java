@@ -1,10 +1,17 @@
 package httpserver;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import taskmanager.Task;
 import taskmanager.TaskManager;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class TasksHandler extends BaseHttpHandler implements HttpHandler {
     public TasksHandler(TaskManager taskManager) {
@@ -20,25 +27,54 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
             case TaskEndpoint.GET : {
                 String result = this.taskManager.getTasks().toString();
                 this.sendText(exchange, result);
+                break;
             }
             case TaskEndpoint.GET_ID: {
                 int taskId = this.getTaskIdFromRequestPath(requestPath);
-                String result = this.taskManager.getTaskById(taskId).toString();
-                this.sendText(exchange, result);
+                Task task = this.taskManager.getTaskById(taskId);
+                // если taskId = null происходит ошибка
+                if (task == null) {
+                    this.sendNotFound(exchange, "Запрошенная задача не найдена.");
+                } else {
+                    this.sendText(exchange, task.toString());
+                }
+                break;
             }
             case TaskEndpoint.POST: {
 //                получить данные,
+                InputStream requestBody = exchange.getRequestBody();
+                String body = new String(requestBody.readAllBytes(), StandardCharsets.UTF_8);
 //                сконвертировать их в Task,
+                Gson gson = new GsonBuilder()
+                        .setPrettyPrinting()
+                        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                        .registerTypeAdapter(Duration.class, new DurationAdapter())
+                        .serializeNulls()
+                        .create();
+                Task task = gson.fromJson(body, Task.class);
 //                проверить есть ли ID,
 //                вызвать нужный метод
+                if (task.getId() == 0) {
+                    int newTaskId = this.taskManager.addTask(task);
+                    if (newTaskId == -1) {
+                        this.sendHasInteractions(exchange, "Срок выполнения новой задачи пересекается с существующими.");
+                    }
+                    this.sendCreated(exchange);
+                } else {
+                    this.taskManager.updateTask(task);
+                    this.sendCreated(exchange);
+                }
+                break;
             }
             case TaskEndpoint.DELETE_ID: {
                 int taskId = this.getTaskIdFromRequestPath(requestPath);
                 this.taskManager.removeTaskById(taskId);
-                this.sendText(exchange, "Задаче с ID " + taskId + " удалена.");
+                this.sendText(exchange, "Задача с ID " + taskId + " удалена.");
+                break;
             }
             case TaskEndpoint.UNKNOWN: {
                 this.sendBadRequest(exchange, "Получен неверный запрос.");
+                break;
             }
         }
     }
@@ -48,10 +84,10 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
             case "GET" : {
                 if (this.pathContainsId(requestPath)) {
                     return TaskEndpoint.GET_ID;
-                } else if (this.pathContainsParams(requestPath)) {
-                    return TaskEndpoint.UNKNOWN;
-                } else {
+                } else if (!this.pathContainsParams(requestPath)) {
                     return TaskEndpoint.GET;
+                } else {
+                    return TaskEndpoint.UNKNOWN;
                 }
             }
             case "POST": {
@@ -73,7 +109,8 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private boolean pathContainsParams(String requestPath) {
-        return requestPath.split("/").length == 2;
+        int numPathParts = requestPath.split("/").length;
+        return numPathParts > 2;
     }
 
     private boolean pathContainsId(String requestPath) {
