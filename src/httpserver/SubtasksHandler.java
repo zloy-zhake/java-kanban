@@ -1,31 +1,25 @@
 package httpserver;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import taskmanager.Subtask;
-import taskmanager.Task;
 import taskmanager.TaskManager;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
     public SubtasksHandler(TaskManager taskManager) {
         super(taskManager);
     }
 
-    enum SubtasksEndpoint {GET, GET_ID, POST, DELETE_ID, UNKNOWN}
-
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String requestPath = exchange.getRequestURI().getPath();
         switch (this.getEndpoint(exchange.getRequestMethod(), requestPath)) {
-            case SubtasksEndpoint.GET : {
+            case SubtasksEndpoint.GET: {
                 String result = this.taskManager.getSubtasks().toString();
                 this.sendText(exchange, result);
                 break;
@@ -76,7 +70,7 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
 
     private SubtasksEndpoint getEndpoint(String requestMethod, String requestPath) {
         switch (requestMethod) {
-            case "GET" : {
+            case "GET": {
                 if (this.pathContainsId(requestPath)) {
                     return SubtasksEndpoint.GET_ID;
                 } else if (!this.pathContainsParams(requestPath)) {
@@ -92,14 +86,17 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
                     return SubtasksEndpoint.POST;
                 }
             }
-            case "DELETE" : {
+            case "DELETE": {
                 if (this.pathContainsId(requestPath)) {
                     return SubtasksEndpoint.DELETE_ID;
                 } else {
                     return SubtasksEndpoint.UNKNOWN;
                 }
             }
-            default: return SubtasksEndpoint.UNKNOWN;
+            default:
+                return SubtasksEndpoint.UNKNOWN;
         }
     }
+
+    enum SubtasksEndpoint {GET, GET_ID, POST, DELETE_ID, UNKNOWN}
 }

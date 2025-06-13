@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
-    private TaskManager taskManager;
     private static Gson taskAdaptedGson;
+    private final TaskManager taskManager;
     private HttpServer httpServer;
 
     public HttpTaskServer(TaskManager taskManager) {

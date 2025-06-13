@@ -1,7 +1,6 @@
 package httpserver;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import taskmanager.Task;
@@ -10,21 +9,17 @@ import taskmanager.TaskManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class TasksHandler extends BaseHttpHandler implements HttpHandler {
     public TasksHandler(TaskManager taskManager) {
         super(taskManager);
     }
 
-    enum TasksEndpoint {GET, GET_ID, POST, DELETE_ID, UNKNOWN}
-
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String requestPath = exchange.getRequestURI().getPath();
         switch (this.getEndpoint(exchange.getRequestMethod(), requestPath)) {
-            case TasksEndpoint.GET : {
+            case TasksEndpoint.GET: {
                 String result = this.taskManager.getTasks().toString();
                 this.sendText(exchange, result);
                 break;
@@ -75,7 +70,7 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
 
     private TasksEndpoint getEndpoint(String requestMethod, String requestPath) {
         switch (requestMethod) {
-            case "GET" : {
+            case "GET": {
                 if (this.pathContainsId(requestPath)) {
                     return TasksEndpoint.GET_ID;
                 } else if (!this.pathContainsParams(requestPath)) {
@@ -91,14 +86,17 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                     return TasksEndpoint.POST;
                 }
             }
-            case "DELETE" : {
+            case "DELETE": {
                 if (this.pathContainsId(requestPath)) {
                     return TasksEndpoint.DELETE_ID;
                 } else {
                     return TasksEndpoint.UNKNOWN;
                 }
             }
-            default: return TasksEndpoint.UNKNOWN;
+            default:
+                return TasksEndpoint.UNKNOWN;
         }
     }
+
+    enum TasksEndpoint {GET, GET_ID, POST, DELETE_ID, UNKNOWN}
 }

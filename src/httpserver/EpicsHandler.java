@@ -1,31 +1,25 @@
 package httpserver;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import taskmanager.Epic;
-import taskmanager.Subtask;
 import taskmanager.TaskManager;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
     public EpicsHandler(TaskManager taskManager) {
         super(taskManager);
     }
 
-    enum EpicsEndpoint {GET, GET_ID, GET_SUBTASKS, POST, DELETE_ID, UNKNOWN}
-
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String requestPath = exchange.getRequestURI().getPath();
         switch (this.getEndpoint(exchange.getRequestMethod(), requestPath)) {
-            case EpicsEndpoint.GET : {
+            case EpicsEndpoint.GET: {
                 String result = this.taskManager.getEpics().toString();
                 this.sendText(exchange, result);
                 break;
@@ -86,7 +80,7 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
             case "GET": {
                 if (this.pathContainsIdAndSubtasks(requestPath)) {
                     return EpicsEndpoint.GET_SUBTASKS;
-                }else if (this.pathContainsId(requestPath)) {
+                } else if (this.pathContainsId(requestPath)) {
                     return EpicsEndpoint.GET_ID;
                 } else if (!this.pathContainsParams(requestPath)) {
                     return EpicsEndpoint.GET;
@@ -123,10 +117,9 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
         } catch (NumberFormatException e) {
             return false;
         }
-        if (!pathParts[3].equals("subtasks")) {
-            return false;
-        }
-        return true;
+        return pathParts[3].equals("subtasks");
     }
+
+    enum EpicsEndpoint {GET, GET_ID, GET_SUBTASKS, POST, DELETE_ID, UNKNOWN}
 
 }
