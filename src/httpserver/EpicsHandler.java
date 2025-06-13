@@ -120,6 +120,6 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
         return pathParts[3].equals("subtasks");
     }
 
-    enum EpicsEndpoint {GET, GET_ID, GET_SUBTASKS, POST, DELETE_ID, UNKNOWN}
+    enum EpicsEndpoint { GET, GET_ID, GET_SUBTASKS, POST, DELETE_ID, UNKNOWN }
 
 }
