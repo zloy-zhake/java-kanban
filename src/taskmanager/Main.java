@@ -1,58 +1,66 @@
 package taskmanager;
 
+import com.sun.net.httpserver.HttpServer;
+import httpserver.HttpTaskServer;
+
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Поехали!");
-        System.out.println();
         Managers taskManagerUtil = new Managers();
+        taskmanager.TaskManager taskManager = taskManagerUtil.getDefault();
+        HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
+        httpTaskServer.start();
+
+//        System.out.println("Поехали!");
+//        System.out.println();
+//        Managers taskManagerUtil = new Managers();
 //        taskmanager.TaskManager taskManager = taskManagerUtil.getDefault();
-        TaskManager taskManager = taskManagerUtil.getFileBackedTaskManager("tasks.csv");
-
-        System.out.println("Создайте две задачи, эпик с тремя подзадачами и эпик без подзадач.");
-        System.out.println();
-        Task task1 = new Task("Задача 1", "Описание задачи 1.");
-        int task1Id = taskManager.addTask(task1);
-        Task task2 = new Task("Задача 2", "Описание задачи 2.");
-        int task2Id = taskManager.addTask(task2);
-        Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
-        int epic1Id = taskManager.addEpic(epic1);
-        Subtask subtask11 = new Subtask("Подзадача 1-1", "Описание подзадачи 1-1.", epic1Id);
-        int subtask11Id = taskManager.addSubtask(subtask11);
-        Subtask subtask12 = new Subtask("Подзадача 1-2", "Описание подзадачи 1-2.", epic1Id);
-        int subtask12Id = taskManager.addSubtask(subtask12);
-        Subtask subtask13 = new Subtask("Подзадача 1-3", "Описание подзадачи 1-3.", epic1Id);
-        int subtask13Id = taskManager.addSubtask(subtask13);
-        Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
-        int epic2Id = taskManager.addEpic(epic1);
-        printHistory(taskManager);
-        System.out.println();
-
-        System.out.println("Запросите созданные задачи несколько раз в разном порядке.");
-        System.out.println("После каждого запроса выведите историю и убедитесь, что в ней нет повторов.");
-        Task task = taskManager.getTaskById(task1Id);
-        task = taskManager.getTaskById(task2Id);
-        task = taskManager.getEpicById(epic1Id);
-        task = taskManager.getEpicById(epic2Id);
-        task = taskManager.getSubtaskById(subtask11Id);
-        task = taskManager.getSubtaskById(subtask12Id);
-        task = taskManager.getSubtaskById(subtask13Id);
-        printHistory(taskManager);
-        task = taskManager.getTaskById(task2Id);
-        task = taskManager.getEpicById(epic2Id);
-        task = taskManager.getSubtaskById(subtask12Id);
-        printHistory(taskManager);
-        System.out.println();
-
-        System.out.println("Удалите задачу, которая есть в истории, и проверьте, что при печати она не будет выводиться.");
-        taskManager.removeTaskById(task1Id);
-        printHistory(taskManager);
-        System.out.println();
-
-        System.out.println("Удалите эпик с тремя подзадачами и убедитесь, что из истории удалился как сам эпик, так и все его подзадачи.");
-        taskManager.removeEpicById(epic1Id);
-        printHistory(taskManager);
-        System.out.println();
+//        TaskManager taskManager = taskManagerUtil.getFileBackedTaskManager("tasks.csv");
+//
+//        System.out.println("Создайте две задачи, эпик с тремя подзадачами и эпик без подзадач.");
+//        System.out.println();
+//        Task task1 = new Task("Задача 1", "Описание задачи 1.");
+//        int task1Id = taskManager.addTask(task1);
+//        Task task2 = new Task("Задача 2", "Описание задачи 2.");
+//        int task2Id = taskManager.addTask(task2);
+//        Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
+//        int epic1Id = taskManager.addEpic(epic1);
+//        Subtask subtask11 = new Subtask("Подзадача 1-1", "Описание подзадачи 1-1.", epic1Id);
+//        int subtask11Id = taskManager.addSubtask(subtask11);
+//        Subtask subtask12 = new Subtask("Подзадача 1-2", "Описание подзадачи 1-2.", epic1Id);
+//        int subtask12Id = taskManager.addSubtask(subtask12);
+//        Subtask subtask13 = new Subtask("Подзадача 1-3", "Описание подзадачи 1-3.", epic1Id);
+//        int subtask13Id = taskManager.addSubtask(subtask13);
+//        Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
+//        int epic2Id = taskManager.addEpic(epic1);
+//        printHistory(taskManager);
+//        System.out.println();
+//
+//        System.out.println("Запросите созданные задачи несколько раз в разном порядке.");
+//        System.out.println("После каждого запроса выведите историю и убедитесь, что в ней нет повторов.");
+//        Task task = taskManager.getTaskById(task1Id);
+//        task = taskManager.getTaskById(task2Id);
+//        task = taskManager.getEpicById(epic1Id);
+//        task = taskManager.getEpicById(epic2Id);
+//        task = taskManager.getSubtaskById(subtask11Id);
+//        task = taskManager.getSubtaskById(subtask12Id);
+//        task = taskManager.getSubtaskById(subtask13Id);
+//        printHistory(taskManager);
+//        task = taskManager.getTaskById(task2Id);
+//        task = taskManager.getEpicById(epic2Id);
+//        task = taskManager.getSubtaskById(subtask12Id);
+//        printHistory(taskManager);
+//        System.out.println();
+//
+//        System.out.println("Удалите задачу, которая есть в истории, и проверьте, что при печати она не будет выводиться.");
+//        taskManager.removeTaskById(task1Id);
+//        printHistory(taskManager);
+//        System.out.println();
+//
+//        System.out.println("Удалите эпик с тремя подзадачами и убедитесь, что из истории удалился как сам эпик, так и все его подзадачи.");
+//        taskManager.removeEpicById(epic1Id);
+//        printHistory(taskManager);
+//        System.out.println();
 
 //        System.out.println("Создайте две задачи, а также эпик с двумя подзадачами и эпик с одной подзадачей.");
 //        System.out.println("Распечатайте списки эпиков, задач и подзадач через System.out.println(..)");

@@ -58,4 +58,28 @@ public class BaseHttpHandler {
         exchange.getResponseBody().write(resp);
         exchange.close();
     }
+
+    protected boolean pathContainsParams(String requestPath) {
+        int numPathParts = requestPath.split("/").length;
+        return numPathParts > 2;
+    }
+
+    protected boolean pathContainsId(String requestPath) {
+        String[] pathParts = requestPath.split("/");
+        if (pathParts.length != 3) {
+            return false;
+        }
+        try {
+            int id = Integer.parseInt(pathParts[2]);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
+    protected int getTaskIdFromRequestPath(String requestPath) {
+        String[] pathParts = requestPath.split("/");
+        return Integer.parseInt(pathParts[2]);
+    }
+
 }

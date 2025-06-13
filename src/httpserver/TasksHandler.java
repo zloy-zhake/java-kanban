@@ -18,21 +18,20 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
         super(taskManager);
     }
 
-    enum TaskEndpoint {GET, GET_ID, POST, DELETE_ID, UNKNOWN}
+    enum TasksEndpoint {GET, GET_ID, POST, DELETE_ID, UNKNOWN}
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String requestPath = exchange.getRequestURI().getPath();
         switch (this.getEndpoint(exchange.getRequestMethod(), requestPath)) {
-            case TaskEndpoint.GET : {
+            case TasksEndpoint.GET : {
                 String result = this.taskManager.getTasks().toString();
                 this.sendText(exchange, result);
                 break;
             }
-            case TaskEndpoint.GET_ID: {
+            case TasksEndpoint.GET_ID: {
                 int taskId = this.getTaskIdFromRequestPath(requestPath);
                 Task task = this.taskManager.getTaskById(taskId);
-                // если taskId = null происходит ошибка
                 if (task == null) {
                     this.sendNotFound(exchange, "Запрошенная задача не найдена.");
                 } else {
@@ -40,24 +39,19 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                 }
                 break;
             }
-            case TaskEndpoint.POST: {
-//                получить данные,
+            case TasksEndpoint.POST: {
+                // получить данные,
                 InputStream requestBody = exchange.getRequestBody();
                 String body = new String(requestBody.readAllBytes(), StandardCharsets.UTF_8);
-//                сконвертировать их в Task,
-                Gson gson = new GsonBuilder()
-                        .setPrettyPrinting()
-                        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                        .registerTypeAdapter(Duration.class, new DurationAdapter())
-                        .serializeNulls()
-                        .create();
-                Task task = gson.fromJson(body, Task.class);
-//                проверить есть ли ID,
-//                вызвать нужный метод
+                // конвертировать их в Task,
+                Gson taskAdaptedGson = HttpTaskServer.getTaskAdaptedGson();
+                Task task = taskAdaptedGson.fromJson(body, Task.class);
+                // проверить есть ли ID,
+                // вызвать нужный метод
                 if (task.getId() == 0) {
                     int newTaskId = this.taskManager.addTask(task);
                     if (newTaskId == -1) {
-                        this.sendHasInteractions(exchange, "Срок выполнения новой задачи пересекается с существующими.");
+                        this.sendHasInteractions(exchange, "Срок выполнения новой задачи пересекается с существующими задачами или подзадачами.");
                     }
                     this.sendCreated(exchange);
                 } else {
@@ -66,68 +60,45 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                 }
                 break;
             }
-            case TaskEndpoint.DELETE_ID: {
+            case TasksEndpoint.DELETE_ID: {
                 int taskId = this.getTaskIdFromRequestPath(requestPath);
                 this.taskManager.removeTaskById(taskId);
                 this.sendText(exchange, "Задача с ID " + taskId + " удалена.");
                 break;
             }
-            case TaskEndpoint.UNKNOWN: {
+            case TasksEndpoint.UNKNOWN: {
                 this.sendBadRequest(exchange, "Получен неверный запрос.");
                 break;
             }
         }
     }
 
-    private TaskEndpoint getEndpoint(String requestMethod, String requestPath) {
+    private TasksEndpoint getEndpoint(String requestMethod, String requestPath) {
         switch (requestMethod) {
             case "GET" : {
                 if (this.pathContainsId(requestPath)) {
-                    return TaskEndpoint.GET_ID;
+                    return TasksEndpoint.GET_ID;
                 } else if (!this.pathContainsParams(requestPath)) {
-                    return TaskEndpoint.GET;
+                    return TasksEndpoint.GET;
                 } else {
-                    return TaskEndpoint.UNKNOWN;
+                    return TasksEndpoint.UNKNOWN;
                 }
             }
             case "POST": {
                 if (this.pathContainsParams(requestPath)) {
-                    return TaskEndpoint.UNKNOWN;
+                    return TasksEndpoint.UNKNOWN;
                 } else {
-                    return TaskEndpoint.POST;
+                    return TasksEndpoint.POST;
                 }
             }
             case "DELETE" : {
                 if (this.pathContainsId(requestPath)) {
-                    return TaskEndpoint.DELETE_ID;
+                    return TasksEndpoint.DELETE_ID;
                 } else {
-                    return TaskEndpoint.UNKNOWN;
+                    return TasksEndpoint.UNKNOWN;
                 }
             }
-            default: return TaskEndpoint.UNKNOWN;
+            default: return TasksEndpoint.UNKNOWN;
         }
-    }
-
-    private boolean pathContainsParams(String requestPath) {
-        int numPathParts = requestPath.split("/").length;
-        return numPathParts > 2;
-    }
-
-    private boolean pathContainsId(String requestPath) {
-        String[] pathParts = requestPath.split("/");
-        if (pathParts.length != 3) {
-            return false;
-        }
-        try {
-            int id = Integer.parseInt(pathParts[2]);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
-
-    private int getTaskIdFromRequestPath(String requestPath) {
-        String[] pathParts = requestPath.split("/");
-        return Integer.parseInt(pathParts[2]);
     }
 }

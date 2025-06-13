@@ -8,32 +8,32 @@ public class Epic extends Task {
     private final ArrayList<Integer> subtaskIds;
     private LocalDateTime endTime;
 
-    Epic(String name, String description) {
+    public Epic(String name, String description) {
         super(name, description);
         this.subtaskIds = new ArrayList<>();
     }
 
-    Epic(String name, String description, int id, Status status) {
+    public Epic(String name, String description, int id, Status status) {
         super(name, description, id, status);
         this.subtaskIds = new ArrayList<>();
     }
 
-    Epic(String name, String description, int id, Status status, ArrayList<Integer> subtaskIds) {
+    public Epic(String name, String description, int id, Status status, ArrayList<Integer> subtaskIds) {
         super(name, description, id, status);
         this.subtaskIds = subtaskIds;
     }
 
-    Epic(String name, String description, LocalDateTime startTime, Duration duration) {
+    public Epic(String name, String description, LocalDateTime startTime, Duration duration) {
         super(name, description, startTime, duration);
         this.subtaskIds = new ArrayList<>();
     }
 
-    Epic(String name, String description, int id, Status status, LocalDateTime startTime, Duration duration) {
+    public Epic(String name, String description, int id, Status status, LocalDateTime startTime, Duration duration) {
         super(name, description, id, status, startTime, duration);
         this.subtaskIds = new ArrayList<>();
     }
 
-    Epic(String name, String description, int id, Status status, LocalDateTime startTime, Duration duration, ArrayList<Integer> subtaskIds) {
+    public Epic(String name, String description, int id, Status status, LocalDateTime startTime, Duration duration, ArrayList<Integer> subtaskIds) {
         super(name, description, id, status, startTime, duration);
         this.subtaskIds = subtaskIds;
     }
