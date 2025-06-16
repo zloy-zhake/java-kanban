@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test;
+import taskmanager.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -8,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
 
-    // проверьте, что наследники класса Task равны друг другу, если равен их id;
+    // проверьте, что наследники класса taskmanager.Task равны друг другу, если равен их id;
     @Test
     void testEpicsEquals() {
         ArrayList<Integer> subtasks1 = new ArrayList<>();
@@ -96,16 +97,16 @@ class EpicTest {
         assertEquals(Status.IN_PROGRESS, epic1.getStatus());
     }
 
-    // проверьте, что объект Epic нельзя добавить в самого себя в виде подзадачи;
+    // проверьте, что объект taskmanager.Epic нельзя добавить в самого себя в виде подзадачи;
     // при добавлении эпика в эпик происходит ошибка компиляции
     // @Test
     // void testEpicCannotBeSubtask() {
-    //     Managers taskManagerUtil = new Managers();
-    //     TaskManager taskManager = taskManagerUtil.getDefault();
+    //     taskmanager.Managers taskManagerUtil = new taskmanager.Managers();
+    //     taskmanager.TaskManager taskManager = taskManagerUtil.getDefault();
     //
     //     ArrayList<Integer> subtasks = new ArrayList<>();
-    //     Epic epic = new Epic("name1", "description1", 1, Status.NEW, subtasks);
-    //     Subtask wrongSubtask = new Subtask("name1", "description1", 1);
+    //     taskmanager.Epic epic = new taskmanager.Epic("name1", "description1", 1, taskmanager.Status.NEW, subtasks);
+    //     taskmanager.Subtask wrongSubtask = new taskmanager.Subtask("name1", "description1", 1);
     //     taskManager.addEpic(epic);
     //     taskManager.addSubtask(epic);
     // }

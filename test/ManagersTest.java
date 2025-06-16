@@ -1,4 +1,7 @@
 import org.junit.jupiter.api.Test;
+import taskmanager.HistoryManager;
+import taskmanager.Managers;
+import taskmanager.TaskManager;
 
 import java.io.File;
 import java.io.IOException;
